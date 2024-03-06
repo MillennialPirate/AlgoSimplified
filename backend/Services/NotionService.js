@@ -65,7 +65,7 @@ getNotionPageContent = async() => {
         jsonCombinedString.push(jsonString); 
         next_cursor = JSON.parse(jsonString).next_cursor; 
     }
-    console.log(jsonCombinedString);
+    return jsonCombinedString;
 }   
 
 module.exports = {getNotionPageContent};
