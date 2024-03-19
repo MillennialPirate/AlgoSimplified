@@ -50,8 +50,8 @@ nonFirstNotionCalls = async(notionKey, pageId, startCursor) => {
 }
 
 getNotionPageContent = async() => {
-    const notionKey = ''; 
-    const pageId = ''; 
+    const notionKey = 'secret_aWn3CJOYdUNJvQ7DKaOz5RDAQNJpiOakDHN4viMeW1L'; 
+    const pageId = 'f190f07d24dc46248dbe20edd077ab32'; 
 
     var next_cursor = '';
     var jsonCombinedString = [];
