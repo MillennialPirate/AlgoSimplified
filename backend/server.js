@@ -3,10 +3,24 @@ const express = require('express');
 const bodyParser = require('body-parser');  
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken');
+const {MongoClient, ObjectId} = require('mongodb'); 
+
 const app = express();
+
 const notionService = require('./Services/NotionService');
 const notionParser = require('./Services/NotionJsonParser');
-const tokenHandler = require('./Services/TokenVerification');
+const tokenHandler = require('./Middlewares/TokenVerification');
+const dbService = require('./Database/DbConnection');
+const user = require('./Database/Models/User'); 
+
+// connection uri for mongodb
+const uri = 'mongodb+srv://siddharthschandran44:<password>@cluster0.93uleuh.mongodb.net/AlgoSimplified?retryWrites=true&w=majority&appName=Cluster0';
+
+// create a new mongo client 
+const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true}); 
+
+// connect to mongo db server 
+
 
 app.use(bodyParser.json()); 
 
@@ -34,11 +48,13 @@ app.post('/signup', async(req, res) => {
             email : req.body.email, 
             password : hashedPassword
         }; 
-        users.push(newUser);
+        
+        const createdUser = await user.create(newUser);
         // respond with success message 
         res.status(201).json({message : 'User created successfully'}); 
     }
     catch(error){
+        console.error('Error creating user:', error);
         res.status(500).json({message : 'Internal Server Error'}); 
     }
 });
@@ -77,4 +93,5 @@ app.get('/profile', tokenHandler.verifyToken, (req, res) => {
 
 app.listen(5000, () => {
     console.log("Server is up and running");
+    dbService.connectToMongoDb(client);
 })
